@@ -51,7 +51,7 @@ while True:
                 return i
 
 
-
+#------------------------------------------------POST-START------------------------------------------------------------
     @app.get("/posts",  response_model=List[schemas.Post])
     def get_posts(db: Session = Depends(get_db)):
         posts = db.query(models.Post).all()
@@ -98,8 +98,24 @@ while True:
         db.commit()
         return post_query.first()
 
+#------------------------------------------------POST-END------------------------------------------------------------
+#------------------------------------------------USER-START----------------------------------------------------------
 
-#-------------------------------------------------------------------------------------------------------------------------------------------------------------
+    @app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+    def creat_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+        new_user = models.User(**user.dict())
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
+
+#------------------------------------------------USER-END------------------------------------------------------------
+
+
+
+
+
+#--------------------------------------------previous code-------------------------------------------------------------
 #def find_post(id):
 #     for p in my_posts:
 #         if p['id'] == id:

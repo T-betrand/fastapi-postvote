@@ -1,4 +1,7 @@
 from pydantic import BaseModel
+from pydantic.networks import EmailStr
+
+
 from datetime import datetime
 
 
@@ -17,6 +20,21 @@ class PostCreate(PostBase):
 
 class Post(PostBase):
     id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+    created_at: datetime
+
+class UserOut(BaseModel):
+    id: int
+    email: EmailStr
     created_at: datetime
 
     class Config:
