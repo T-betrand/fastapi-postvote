@@ -45,7 +45,7 @@ def update_user(id: int, updated_user: schemas.UserCreate, db: Session = Depends
     user_query = db.query(models.User).filter(models.User.id == id)
     user = user_query.first()
     if user == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id {id} does not exist")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with id {id} does not exist")
     user_query.update(updated_user.dict(), synchronize_session=False)
     db.commit()
     return user_query.first()
@@ -53,9 +53,9 @@ def update_user(id: int, updated_user: schemas.UserCreate, db: Session = Depends
 
 @router.delete("/delete/{id}")
 def delete_user(id: int, db: Session = Depends(get_db)):
-    user = db.query(models.Post).filter(models.Post.id == id)
+    user = db.query(models.User).filter(models.User.id == id)
     if user.first() == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id {id} does not exist")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with id {id} does not exist")
     user.delete(synchronize_session=False)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
