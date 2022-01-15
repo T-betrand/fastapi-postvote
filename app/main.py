@@ -1,5 +1,5 @@
 from collections import defaultdict
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, Response, status, Depends
 from fastapi.exceptions import HTTPException
 from fastapi.param_functions import Body
 from pydantic import BaseModel
@@ -9,7 +9,17 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 
+from sqlalchemy.orm import Session
+from . import models 
+from .database import engine, SessionLocal, get_db
+
+
+
+models.Base.metadata.create_all(bind=engine)
+
+
 app = FastAPI()
+
 
 
 class Post(BaseModel):
@@ -30,9 +40,6 @@ while True:
         print('connection to database failed')
         print("Error: ", error)
         time.sleep(2)
-
-
-my_posts = [{"title":"title of post", "content":"content 1", "id": 1},{"title":"title of post 2", "content":"content 2", "id": 2}]
 
 
 
@@ -102,7 +109,20 @@ def update_post(id: int, post: Post):
 
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------
-# @app.get("/")
+#def find_post(id):
+#     for p in my_posts:
+#         if p['id'] == id:
+#             return p
+
+
+# def find_index_post(id):
+#     for i, p in enumerate(my_posts):
+#         if p['id'] == id:
+#             return i
+# 
+# 
+
+#  @app.get("/")
 # def index():
 #     return {"message": "hello World !"}
 
