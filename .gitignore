@@ -1,5 +1,5 @@
 __pycache__
 .vscode
+.env
 nv
 progress.txt
-config.py

@@ -5,6 +5,8 @@ from pydantic.networks import EmailStr
 
 from datetime import datetime
 
+from pydantic.types import conint
+
 
 
 
@@ -55,3 +57,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+
+
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(le=1)
