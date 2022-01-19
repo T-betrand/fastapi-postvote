@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response, status, Depends, HTTPException, APIRouter
 
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from .. import models, schemas, utils
 from ..database import engine, get_db
@@ -9,8 +9,8 @@ from ..database import engine, get_db
 
 
 router = APIRouter(
-    prefix="users",
-    tags="users"
+    prefix="/users",
+    tags=["users"]
 )
 
 
@@ -20,6 +20,9 @@ def creat_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
 
+    check_dublicate = db.query(models.User).filter(models.User.email == user.email).first()
+    if check_dublicate:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="user with email already exist")
     new_user = models.User(**user.dict())
     db.add(new_user)
     db.commit()
@@ -28,8 +31,8 @@ def creat_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/", response_model=List[schemas.UserOut])
-def get_users(db: Session = Depends(get_db)):
-    users = db.query(models.User).all()
+def get_users(db: Session = Depends(get_db), limit: int = 10, skip: int = 2, search: Optional[str] = ""):
+    users = db.query(models.User).filter(models.User.email.contains(search)).limit(limit).offset(skip).all()
     return users
 
 @router.get("/{id}", response_model=schemas.UserOut)

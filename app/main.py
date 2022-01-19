@@ -1,26 +1,19 @@
-from fastapi import FastAPI, Response, status, Depends
-from fastapi.exceptions import HTTPException
-from fastapi.param_functions import Body
-
-from typing import Optional, List
-from random import randrange
-from collections import defaultdict
-
-import psycopg2
-from psycopg2.extras import RealDictCursor
-
-from sqlalchemy.orm import Session
-from sqlalchemy.sql.functions import mode
-
-import time
-
-
-from . import models, schemas, utils
-from .database import engine, get_db
-
+from fastapi import FastAPI
+from . import models
+from .database import engine
 from .routers import post, user, auth
+from pydantic import BaseSettings
+
+from app import database
 
 
+
+class Settings(BaseSettings):
+    database_password: str = ""
+    database_username: str = ""
+    secret_key: str = ""
+
+settings = Settings()
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -28,37 +21,21 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-while True:
-
-    try:
-        conn =  psycopg2.connect(host = 'localhost', database = 'name-of-database', username = 'postgres', password = 'password-of-database', cursor_factory= RealDictCursor)
-        cursor = conn.cursor()
-        print('database connection was successfull')
-    except Exception as error:
-        print('connection to database failed')
-        print("Error: ", error)
-        time.sleep(2)
+app.include_router(auth.router)
+app.include_router(post.router)
+app.include_router(user.router)
 
 
 
-    my_posts = [{}]
-
-    def find_post(id):
-        for p in my_posts:
-            if p['id'] == id:
-                return p
-
-
-    def find_index_post(id):
-        for i, p in enumerate(my_posts):
-            if p['id'] == id:
-                return i
 
 
 
-    app.include_router(post.router)
-    app.include_router(user.router)
-    app.include_router(auth.router)
+
+
+
+
+
+
 
 
 
