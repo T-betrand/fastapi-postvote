@@ -7,7 +7,7 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-      - name: pulling git repo
+      - name: Checkout
         uses: actions/checkout@v2
-      - name: say hi
+      - name: say hi to tebo
         run: echo "hi there"     
