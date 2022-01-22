@@ -32,7 +32,7 @@ def creat_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[schemas.UserOut])
 def get_users(db: Session = Depends(get_db), limit: int = 10, skip: int = 2, search: Optional[str] = ""):
-    users = db.query(models.User).filter(models.User.email.contains(search)).limit(limit).offset(skip).all()
+    users = db.query(models.User).all()
     return users
 
 @router.get("/{id}", response_model=schemas.UserOut)
