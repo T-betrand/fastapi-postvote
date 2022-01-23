@@ -3,3 +3,6 @@ __pycache__
 .env
 nv
 progress.txt
+.github/workflows/google.yml
+.github/workflows/gke-kustomize.yml
+.github/workflows/pipeline.yml
