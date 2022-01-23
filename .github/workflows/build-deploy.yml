@@ -84,7 +84,7 @@ jobs:
       GKE_CLUSTER: github-actions-gke 
       GKE_ZONE: us-central1-c   
       DEPLOYMENT_NAME: github-actions-gke-deployment
-      REPOSITORY: samples  
+      REPOSITORY: postvote  
       IMAGE: github-actions-gke-image
 
     steps:
