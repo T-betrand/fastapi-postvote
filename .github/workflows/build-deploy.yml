@@ -87,6 +87,11 @@ jobs:
       REPOSITORY: postvote  
       IMAGE: github-actions-gke-image
 
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v2
